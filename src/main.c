@@ -30,9 +30,9 @@ char *file_contents(char *path) {
   }
   long size = file_size(file);
   char *contents = malloc(size + 1);
-  char *write_it = contents;
   size_t bytes_read = 0;
   while (bytes_read < size) {
+    printf("Reading %ld bytes\n", size - bytes_read);
     size_t bytes_read_this_iter = fread(contents, 1, size - bytes_read, file);
 
     if (ferror(file)) {
@@ -48,11 +48,73 @@ char *file_contents(char *path) {
     }
   }
   if (bytes_read < size) {
+    printf("read: %zu, size: %zu", bytes_read, size);
     free(contents);
     return NULL;
   }
-  contents[size] = '\0';
+  contents[bytes_read] = '\0';
   return contents;
+}
+/*
+ *
+ */
+typedef struct Error {
+  enum ErrorType {
+    ERROR_NONE = 0,
+    ERROR_ARGUMENTS,
+    ERROR_TYPE,
+    ERROR_SYNTAX,
+    ERROR_GENERIC,
+    ERROR_TODO,
+  } type;
+  char *message;
+} Error;
+
+Error ok = {ERROR_NONE, NULL};
+
+void print_error(Error err) {
+  if (err.type == ERROR_NONE) {
+    return;
+  }
+  printf("ERROR: ");
+  switch (err.type) {
+  case ERROR_TODO:
+    printf("TODO (not implemented)");
+    break;
+  case ERROR_ARGUMENTS:
+    printf("Invalid arguments");
+    break;
+  case ERROR_SYNTAX:
+    printf("Invalid Syntax");
+    break;
+  case ERROR_TYPE:
+    printf("Mismatched types");
+    break;
+  case ERROR_GENERIC:
+    printf("ERROR");
+    break;
+  default:
+    printf("Unknown error type...");
+    break;
+  }
+  putchar('\n');
+  if (err.message) {
+    printf("     : %s", err.message);
+  }
+}
+
+#define ERROR_CREATE(n, t, msg) Error(n) = {(t), (msg)}
+#define ERROR_PREP(n, t, msg)                                                  \
+  (n).type = (t);                                                              \
+  (n).message = (msg)
+
+Error lex(char *source, char **beg, char **end) {
+  Error err = ok;
+  if (!source) {
+    ERROR_PREP(err, ERROR_ARGUMENTS, "Source cannot be empty");
+    return err;
+  }
+  return ok;
 }
 /*
  *
@@ -68,5 +130,9 @@ int main(int argc, char **argv) {
     printf("Contents of %s\n---\n%s---\n", path, contents);
     free(contents);
   }
+
+  Error err = lex(NULL, NULL, NULL);
+  print_error(err);
+
   return 0;
 }
