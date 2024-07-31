@@ -25,7 +25,6 @@ const char *delimiter = " \n\r,():";
 typedef struct Token {
   char *beginning;
   char *end;
-  struct Token *next;
 } Token;
 /*
  */
@@ -36,34 +35,8 @@ Token *token_create() {
   return token;
 }
 
-void free_tokens(Token *root) {
-  while (root) {
-    Token *token_free = root;
-    root = root->next;
-    free(token_free);
-  }
-}
-
 void print_token(Token node) {
   printf("%.*s", node.end - node.beginning, node.beginning);
-}
-/*
- */
-void print_tokens(Token *root) {
-  if(DEBUG){
-    size_t count = 1;
-    while(root){
-      // FIXME remove inf loop checker
-      if(count > 10000) { break; }
-      printf("Token %zu: ", count);
-      if (root->beginning && root->end){
-        printf("%.*s", root->end - root->beginning, root->beginning);
-      }
-      putchar('\n');
-      root = root->next;
-      count++;
-    }
-  }
 }
 /*
  */
@@ -238,6 +211,7 @@ char *file_contents(char *path) {
   }
   long size = file_size(file);
   char *contents = malloc(size + 1);
+  assert(contents && "Could not allocate buffer Contents");
   size_t bytes_read = 0;
   while (bytes_read < size) {
     printf("Reading %ld bytes\n", size - bytes_read);
@@ -375,7 +349,6 @@ Error parse_source(char *source, Node *environment) {
   Token *tokens = NULL;
   Token *tokens_iter = tokens;
   Token current_token;
-  current_token.next = NULL;
   current_token.beginning = source;
   current_token.end = source;
   Node *root = calloc(1, sizeof(Node));
@@ -402,7 +375,6 @@ Error parse_source(char *source, Node *environment) {
     print_node(&working_node, 0);
     putchar('\n');
   }
-  free_tokens(tokens);
   free_node(root);
   return err;
 }
