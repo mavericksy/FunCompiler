@@ -1,6 +1,7 @@
 # Call me Funky!
 a : integer = 1
 b := 2
+c : integer = 0
 
 defun foo (a:integer, b:integer):integer {
     return a + b
