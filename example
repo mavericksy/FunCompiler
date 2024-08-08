@@ -8,3 +8,6 @@ defun foo (a:integer, b:integer):integer {
 }
 
 foo(a, b)
+
+d : string = "YO"
+e := "GO"
