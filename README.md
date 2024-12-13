@@ -4,7 +4,15 @@ Just a little fun compiler in C.
 
 Statically typed and compiled language.
 
-# Build
+## TODO
+
+[ ] Parsing
+[x] Comments
+[x] Integers
+[ ] Strings
+[ ] Environment
+
+## Build
 
 Start with the build tree:
 

@@ -1,13 +1,16 @@
 # Call me Funky!
-a : integer = 1
-b := 2
-c : integer = 0
+ab : integer = 13
+de : string = 'YO'
+bc := 2
+cd : integer = 0
 
 defun foo (a:integer, b:integer):integer {
     return a + b
 }
 
-foo(a, b)
+foo(ab, bc)
 
-d : string = "YO"
-e := "GO"
+de : string = 'YO'
+ef := 'GO'
+# TODO should cater for double quotes
+#fg := "JAI"
